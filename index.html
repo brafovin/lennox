@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lenny Blueberry – Das Getränk, das sich selbst kühlt</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue-dark:  #0a1a3c;
+      --blue-mid:   #0d3a8e;
+      --blue-main:  #1565e0;
+      --blue-light: #4db3ff;
+      --blue-neon:  #00cfff;
+      --white:      #ffffff;
+      --gold:       #ffd700;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--blue-dark);
+      color: var(--white);
+      min-height: 100vh;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      background: rgba(0,0,0,.45);
+      padding: 8px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      border-bottom: 1px solid rgba(77,179,255,.25);
+    }
+    .topbar a {
+      color: var(--blue-neon);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      letter-spacing: .5px;
+    }
+    .topbar a:hover { text-decoration: underline; }
+    .tiktok-icon {
+      width: 18px; height: 18px; fill: var(--white);
+      vertical-align: middle;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, var(--blue-mid) 0%, var(--blue-dark) 100%);
+      padding: 18px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid var(--blue-light);
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 4px 24px rgba(0,207,255,.15);
+    }
+    .logo { font-size: 2rem; font-weight: 900; letter-spacing: -1px; }
+    .logo span { color: var(--blue-neon); }
+    nav { display: flex; gap: 28px; }
+    nav a {
+      color: rgba(255,255,255,.75);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color .2s;
+      font-size: 15px;
+    }
+    nav a:hover { color: var(--blue-neon); }
+
+    .cart-btn {
+      background: var(--blue-main);
+      border: none; cursor: pointer;
+      color: #fff; font-size: 15px;
+      padding: 8px 18px; border-radius: 50px;
+      display: flex; align-items: center; gap: 8px;
+      font-weight: 700; transition: background .2s, transform .1s;
+      position: relative;
+    }
+    .cart-btn:hover { background: var(--blue-neon); color: var(--blue-dark); transform: scale(1.04); }
+    .cart-count {
+      background: var(--gold); color: var(--blue-dark);
+      border-radius: 50%; width: 20px; height: 20px;
+      font-size: 11px; display: flex; align-items: center;
+      justify-content: center; font-weight: 900;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: radial-gradient(ellipse 80% 60% at 50% 30%, #1a4fb5 0%, var(--blue-dark) 70%);
+      padding: 60px 40px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 60px;
+      flex-wrap: wrap;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='1.5' fill='rgba(77,179,255,.15)'/%3E%3C/svg%3E") repeat;
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      background: var(--gold); color: var(--blue-dark);
+      padding: 4px 14px; border-radius: 50px;
+      font-size: 12px; font-weight: 800;
+      letter-spacing: 1px; text-transform: uppercase;
+      display: inline-block; margin-bottom: 12px;
+    }
+    .hero-text h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900; line-height: 1.1;
+      text-shadow: 0 0 30px rgba(0,207,255,.6);
+      max-width: 480px;
+    }
+    .hero-text h1 em { color: var(--blue-neon); font-style: normal; }
+    .hero-text p {
+      margin-top: 16px; font-size: 16px;
+      color: rgba(255,255,255,.8); max-width: 420px; line-height: 1.6;
+    }
+
+    .price-tag {
+      display: inline-flex; align-items: baseline; gap: 4px;
+      margin-top: 28px;
+    }
+    .price-tag .amount {
+      font-size: 3.5rem; font-weight: 900; color: var(--gold);
+      text-shadow: 0 0 20px rgba(255,215,0,.5);
+      line-height: 1;
+    }
+    .price-tag .currency { font-size: 1.8rem; font-weight: 700; color: var(--gold); }
+    .price-tag .per { font-size: 13px; color: rgba(255,255,255,.6); margin-left: 4px; align-self: flex-end; }
+
+    .hero-actions { margin-top: 28px; display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn-buy {
+      background: linear-gradient(135deg, var(--blue-neon), var(--blue-main));
+      color: var(--blue-dark); font-weight: 900; font-size: 16px;
+      border: none; padding: 14px 32px; border-radius: 50px; cursor: pointer;
+      box-shadow: 0 6px 30px rgba(0,207,255,.45);
+      transition: transform .15s, box-shadow .15s;
+      letter-spacing: .5px;
+    }
+    .btn-buy:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 10px 40px rgba(0,207,255,.6); }
+    .btn-secondary {
+      background: transparent; color: var(--blue-neon);
+      border: 2px solid var(--blue-neon); font-weight: 700; font-size: 15px;
+      padding: 12px 24px; border-radius: 50px; cursor: pointer;
+      transition: background .2s, color .2s;
+    }
+    .btn-secondary:hover { background: var(--blue-neon); color: var(--blue-dark); }
+
+    .product-img-wrap {
+      position: relative; flex-shrink: 0;
+    }
+    .product-img-wrap img {
+      width: 280px; max-width: 90vw;
+      filter: drop-shadow(0 20px 60px rgba(0,207,255,.5));
+      animation: float 3.5s ease-in-out infinite;
+      border-radius: 16px;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-14px); }
+    }
+    .glow-ring {
+      position: absolute; inset: -20px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,207,255,.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ── FEATURES ── */
+    .features {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;
+      padding: 50px 40px;
+      background: rgba(0,0,0,.25);
+      border-top: 1px solid rgba(77,179,255,.2);
+      border-bottom: 1px solid rgba(77,179,255,.2);
+    }
+    .feature-card {
+      background: linear-gradient(145deg, rgba(21,101,224,.25), rgba(0,207,255,.08));
+      border: 1px solid rgba(77,179,255,.3);
+      border-radius: 16px; padding: 24px 28px;
+      text-align: center; min-width: 180px; max-width: 210px;
+      flex: 1;
+      transition: transform .2s, border-color .2s;
+    }
+    .feature-card:hover { transform: translateY(-4px); border-color: var(--blue-neon); }
+    .feature-icon { font-size: 2.4rem; margin-bottom: 12px; }
+    .feature-card h3 { font-size: 15px; font-weight: 700; color: var(--blue-neon); }
+    .feature-card p { font-size: 13px; color: rgba(255,255,255,.65); margin-top: 6px; line-height: 1.5; }
+
+    /* ── PRODUCT SECTION ── */
+    .section { padding: 60px 40px; max-width: 1100px; margin: 0 auto; }
+    .section-title {
+      font-size: 1.9rem; font-weight: 900; text-align: center;
+      margin-bottom: 36px; letter-spacing: -.5px;
+    }
+    .section-title span { color: var(--blue-neon); }
+
+    /* ── SHOP CARD ── */
+    .shop-grid { display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; }
+    .shop-card {
+      background: linear-gradient(145deg, #112460, #0d1f52);
+      border: 1px solid rgba(77,179,255,.3);
+      border-radius: 20px; overflow: hidden;
+      width: 300px; transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 8px 32px rgba(0,0,0,.35);
+    }
+    .shop-card:hover { transform: translateY(-6px); box-shadow: 0 16px 50px rgba(0,207,255,.25); }
+    .shop-card-img {
+      background: radial-gradient(ellipse at 50% 60%, #1a4fb5 0%, #0a1a3c 100%);
+      padding: 30px 20px 10px;
+      display: flex; justify-content: center;
+      position: relative;
+    }
+    .shop-card-img img { width: 160px; filter: drop-shadow(0 10px 30px rgba(0,207,255,.45)); }
+    .new-tag {
+      position: absolute; top: 12px; right: 12px;
+      background: var(--gold); color: var(--blue-dark);
+      font-size: 11px; font-weight: 900; padding: 3px 10px;
+      border-radius: 50px; letter-spacing: 1px;
+    }
+    .shop-card-body { padding: 20px 22px 24px; }
+    .shop-card-body h3 { font-size: 1.2rem; font-weight: 800; }
+    .shop-card-body .flavor { font-size: 13px; color: var(--blue-neon); margin-top: 4px; }
+    .shop-card-body .desc { font-size: 13px; color: rgba(255,255,255,.6); margin-top: 10px; line-height: 1.5; }
+    .card-footer {
+      display: flex; align-items: center; justify-content: space-between; margin-top: 18px;
+    }
+    .card-price { font-size: 1.7rem; font-weight: 900; color: var(--gold); }
+    .card-price span { font-size: 0.95rem; color: rgba(255,255,255,.5); font-weight: 400; margin-left: 4px; }
+    .btn-card {
+      background: linear-gradient(135deg, var(--blue-neon), var(--blue-main));
+      border: none; color: var(--blue-dark); font-weight: 800; font-size: 13px;
+      padding: 10px 18px; border-radius: 50px; cursor: pointer;
+      transition: transform .15s, box-shadow .15s;
+      box-shadow: 0 4px 16px rgba(0,207,255,.35);
+    }
+    .btn-card:hover { transform: scale(1.07); }
+
+    /* Quantity picker */
+    .qty-row { display: flex; align-items: center; gap: 10px; margin-top: 14px; }
+    .qty-row label { font-size: 13px; color: rgba(255,255,255,.6); }
+    .qty-picker { display: flex; align-items: center; gap: 0; }
+    .qty-btn {
+      background: rgba(77,179,255,.2); border: 1px solid rgba(77,179,255,.4);
+      color: var(--white); width: 28px; height: 28px; border-radius: 50%; cursor: pointer;
+      font-size: 16px; font-weight: 700; transition: background .15s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .qty-btn:hover { background: var(--blue-neon); color: var(--blue-dark); }
+    .qty-display {
+      width: 36px; text-align: center; font-size: 15px; font-weight: 700;
+      background: transparent; border: none; color: var(--white);
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 28px; right: 28px;
+      background: linear-gradient(135deg, var(--blue-neon), var(--blue-main));
+      color: var(--blue-dark); font-weight: 800; font-size: 14px;
+      padding: 14px 22px; border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0,207,255,.45);
+      opacity: 0; transform: translateY(20px);
+      transition: opacity .3s, transform .3s;
+      pointer-events: none; z-index: 999;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    /* ── CART SIDEBAR ── */
+    .cart-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.55);
+      z-index: 200; opacity: 0; pointer-events: none; transition: opacity .3s;
+    }
+    .cart-overlay.open { opacity: 1; pointer-events: all; }
+    .cart-sidebar {
+      position: fixed; top: 0; right: -400px; width: 380px; max-width: 95vw;
+      height: 100vh; background: #0d1f52; border-left: 1px solid rgba(77,179,255,.3);
+      z-index: 201; transition: right .3s; display: flex; flex-direction: column;
+      box-shadow: -8px 0 40px rgba(0,0,0,.5);
+    }
+    .cart-overlay.open .cart-sidebar { right: 0; }
+    .cart-header {
+      padding: 22px 24px; border-bottom: 1px solid rgba(77,179,255,.2);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .cart-header h2 { font-size: 1.2rem; font-weight: 800; }
+    .close-btn {
+      background: rgba(77,179,255,.15); border: none; color: var(--white);
+      width: 34px; height: 34px; border-radius: 50%; font-size: 18px;
+      cursor: pointer; transition: background .15s;
+    }
+    .close-btn:hover { background: var(--blue-neon); color: var(--blue-dark); }
+    .cart-items { flex: 1; overflow-y: auto; padding: 16px 24px; }
+    .cart-empty { text-align: center; color: rgba(255,255,255,.45); padding: 40px 0; font-size: 15px; }
+    .cart-item {
+      display: flex; gap: 14px; align-items: center;
+      padding: 14px 0; border-bottom: 1px solid rgba(77,179,255,.12);
+    }
+    .cart-item img { width: 56px; border-radius: 8px; }
+    .cart-item-info { flex: 1; }
+    .cart-item-info .name { font-weight: 700; font-size: 14px; }
+    .cart-item-info .unit { font-size: 12px; color: var(--blue-neon); margin-top: 2px; }
+    .cart-item-info .subtotal { font-size: 14px; font-weight: 700; color: var(--gold); margin-top: 4px; }
+    .cart-item-qty { display: flex; align-items: center; gap: 6px; margin-top: 6px; }
+    .remove-btn {
+      background: rgba(255,60,60,.15); border: none; color: #ff6060;
+      width: 28px; height: 28px; border-radius: 50%; font-size: 16px;
+      cursor: pointer; transition: background .15s; flex-shrink: 0;
+    }
+    .remove-btn:hover { background: #ff4444; color: #fff; }
+    .cart-footer {
+      padding: 20px 24px;
+      border-top: 1px solid rgba(77,179,255,.2);
+    }
+    .cart-total-row {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;
+    }
+    .cart-total-row .label { font-size: 15px; color: rgba(255,255,255,.7); }
+    .cart-total-row .total { font-size: 1.6rem; font-weight: 900; color: var(--gold); }
+    .btn-checkout {
+      width: 100%; background: linear-gradient(135deg, var(--blue-neon), var(--blue-main));
+      border: none; color: var(--blue-dark); font-weight: 900; font-size: 16px;
+      padding: 15px; border-radius: 50px; cursor: pointer;
+      box-shadow: 0 6px 24px rgba(0,207,255,.4);
+      transition: transform .15s, box-shadow .15s;
+    }
+    .btn-checkout:hover { transform: scale(1.03); box-shadow: 0 10px 36px rgba(0,207,255,.6); }
+
+    /* ── CHECKOUT MODAL ── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,.7);
+      z-index: 300; display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity .3s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: #0d1f52; border: 1px solid rgba(77,179,255,.3);
+      border-radius: 24px; padding: 36px; max-width: 480px; width: 95%;
+      box-shadow: 0 24px 80px rgba(0,0,0,.6);
+      transform: scale(.92); transition: transform .3s;
+    }
+    .modal-overlay.open .modal { transform: scale(1); }
+    .modal h2 { font-size: 1.4rem; font-weight: 900; margin-bottom: 8px; }
+    .modal .subtitle { font-size: 13px; color: rgba(255,255,255,.55); margin-bottom: 24px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 13px; color: var(--blue-neon); margin-bottom: 6px; font-weight: 600; }
+    .form-group input {
+      width: 100%; background: rgba(255,255,255,.07);
+      border: 1px solid rgba(77,179,255,.35); color: var(--white);
+      border-radius: 10px; padding: 11px 14px; font-size: 14px;
+      transition: border-color .2s; outline: none;
+    }
+    .form-group input:focus { border-color: var(--blue-neon); }
+    .form-row { display: flex; gap: 12px; }
+    .form-row .form-group { flex: 1; }
+    .order-summary-mini {
+      background: rgba(0,207,255,.08); border: 1px solid rgba(77,179,255,.2);
+      border-radius: 12px; padding: 14px 18px; margin: 20px 0;
+    }
+    .order-summary-mini h4 { font-size: 13px; color: var(--blue-neon); margin-bottom: 8px; }
+    .summary-row { display: flex; justify-content: space-between; font-size: 13px; color: rgba(255,255,255,.75); margin-top: 4px; }
+    .summary-row.total { color: var(--gold); font-weight: 800; font-size: 15px; border-top: 1px solid rgba(77,179,255,.2); padding-top: 8px; margin-top: 8px; }
+    .modal-actions { display: flex; gap: 12px; margin-top: 8px; }
+    .btn-cancel { flex: 1; background: transparent; border: 1px solid rgba(77,179,255,.35); color: rgba(255,255,255,.7); font-size: 14px; font-weight: 600; padding: 12px; border-radius: 50px; cursor: pointer; transition: border-color .2s; }
+    .btn-cancel:hover { border-color: var(--blue-neon); color: var(--blue-neon); }
+    .btn-place-order { flex: 2; background: linear-gradient(135deg, var(--blue-neon), var(--blue-main)); border: none; color: var(--blue-dark); font-weight: 900; font-size: 15px; padding: 12px; border-radius: 50px; cursor: pointer; transition: transform .15s; }
+    .btn-place-order:hover { transform: scale(1.03); }
+
+    /* Success state */
+    .success-state { text-align: center; padding: 20px 0; display: none; }
+    .success-icon { font-size: 4rem; margin-bottom: 16px; }
+    .success-state h2 { font-size: 1.6rem; font-weight: 900; color: var(--blue-neon); margin-bottom: 8px; }
+    .success-state p { color: rgba(255,255,255,.7); line-height: 1.6; }
+    .success-state .order-num { font-size: 1.1rem; font-weight: 800; color: var(--gold); margin-top: 10px; }
+    .btn-close-success { margin-top: 24px; background: linear-gradient(135deg, var(--blue-neon), var(--blue-main)); border: none; color: var(--blue-dark); font-weight: 900; font-size: 15px; padding: 13px 32px; border-radius: 50px; cursor: pointer; transition: transform .15s; }
+    .btn-close-success:hover { transform: scale(1.04); }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center; padding: 40px 24px;
+      border-top: 1px solid rgba(77,179,255,.2);
+      font-size: 13px; color: rgba(255,255,255,.4);
+      line-height: 1.8;
+    }
+    footer a { color: var(--blue-neon); text-decoration: none; }
+    footer .footer-logo { font-size: 1.6rem; font-weight: 900; color: var(--white); margin-bottom: 8px; }
+    footer .footer-logo span { color: var(--blue-neon); }
+    .social-row { display: flex; justify-content: center; gap: 16px; margin: 14px 0; }
+    .social-pill {
+      display: flex; align-items: center; gap: 7px;
+      background: rgba(77,179,255,.12); border: 1px solid rgba(77,179,255,.25);
+      padding: 7px 16px; border-radius: 50px; color: var(--white);
+      text-decoration: none; font-size: 13px; font-weight: 600;
+      transition: background .2s, border-color .2s;
+    }
+    .social-pill:hover { background: rgba(0,207,255,.2); border-color: var(--blue-neon); color: var(--blue-neon); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 680px) {
+      header { padding: 14px 18px; }
+      nav { display: none; }
+      .hero { padding: 36px 18px 28px; gap: 32px; }
+      .hero-text h1 { font-size: 1.7rem; }
+      .product-img-wrap img { width: 200px; }
+      .section { padding: 40px 18px; }
+      .features { padding: 32px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <span>🧊 Das erste Getränk, das sich selbst kühlt!</span>
+  <a href="https://www.tiktok.com/@Lenny_FCM1965" target="_blank" rel="noopener">
+    <svg class="tiktok-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.17 8.17 0 004.79 1.52V6.76a4.85 4.85 0 01-1.02-.07z"/>
+    </svg>
+    @Lenny_FCM1965
+  </a>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">Lenny<span>.</span></div>
+  <nav>
+    <a href="#shop">Shop</a>
+    <a href="#features">Warum Lenny?</a>
+    <a href="#ueber-uns">Über uns</a>
+  </nav>
+  <button class="cart-btn" onclick="openCart()">
+    🛒 Warenkorb
+    <span class="cart-count" id="cartCount">0</span>
+  </button>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-text">
+    <span class="hero-badge">🆕 Neu auf TikTok</span>
+    <h1>Das erste Getränk,<br/>das sich <em>selbst kühlt</em></h1>
+    <p>Lenny Blueberry – der Blaubeer-Erdbär-Geschmack, eiskalt on demand. Kein Kühlschrank nötig.</p>
+    <div class="price-tag">
+      <span class="currency">€</span>
+      <span class="amount">1,99</span>
+      <span class="per">/ Flasche</span>
+    </div>
+    <div class="hero-actions">
+      <button class="btn-buy" onclick="addToCart(); document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+        Jetzt bestellen
+      </button>
+      <button class="btn-secondary" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">
+        Mehr erfahren
+      </button>
+    </div>
+  </div>
+  <div class="product-img-wrap">
+    <div class="glow-ring"></div>
+    <img src="lenny_blueberry.png" alt="Lenny Blueberry Flasche"
+         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" />
+    <div style="display:none; width:280px; height:360px; background:radial-gradient(ellipse at 50% 40%,#1565e0,#0a1a3c); border-radius:50% 50% 45% 45%/60% 60% 40% 40%; align-items:center; justify-content:center; flex-direction:column; gap:10px; border:3px solid var(--blue-neon); box-shadow:0 0 60px rgba(0,207,255,.5);">
+      <div style="font-size:4rem;">🐻‍❄️</div>
+      <div style="font-size:1.8rem; font-weight:900; color:var(--white); letter-spacing:-1px;">Lenny</div>
+      <div style="font-size:1rem; color:var(--blue-neon); font-weight:700;">BLUEBERRY</div>
+      <div style="font-size:2rem; font-weight:900; color:var(--gold);">€1,99</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="feature-card">
+    <div class="feature-icon">🧊</div>
+    <h3>Selbstkühlend</h3>
+    <p>Einzigartiges Kühlsystem – immer kalt, überall.</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">🫐</div>
+    <h3>Blaubeer-Erdbär</h3>
+    <p>Explosiver Fruchtgeschmack direkt aus der Natur.</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">⚡</div>
+    <h3>On-the-Go</h3>
+    <p>Perfekt für unterwegs, kein Kühlschrank nötig.</p>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">💰</div>
+    <h3>Nur 1,99 €</h3>
+    <p>Top Qualität zum unschlagbaren TikTok-Preis.</p>
+  </div>
+</section>
+
+<!-- SHOP -->
+<section class="section" id="shop">
+  <h2 class="section-title">Unser <span>Shop</span></h2>
+  <div class="shop-grid">
+
+    <!-- Single bottle -->
+    <div class="shop-card">
+      <div class="shop-card-img">
+        <span class="new-tag">NEU</span>
+        <img src="lenny_blueberry.png" alt="Lenny Blueberry"
+             onerror="this.style.cssText='width:120px;height:180px;background:radial-gradient(#1565e0,#0a1a3c);border-radius:40% 40% 35% 35%;display:flex;align-items:center;justify-content:center;font-size:3rem;'">
+      </div>
+      <div class="shop-card-body">
+        <h3>Lenny Blueberry</h3>
+        <div class="flavor">Blaubäre-Erdbär Geschmack</div>
+        <p class="desc">500 ml · Selbstkühlend · Das erste Getränk, das sich selbst kühlt</p>
+        <div class="qty-row">
+          <label>Menge:</label>
+          <div class="qty-picker">
+            <button class="qty-btn" onclick="changeQty('q1',-1)">−</button>
+            <span class="qty-display" id="q1">1</span>
+            <button class="qty-btn" onclick="changeQty('q1',1)">+</button>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="card-price">1,99 € <span>/ Stk.</span></div>
+          <button class="btn-card" onclick="addToCart(getQty('q1'))">In den Korb 🛒</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6er Pack -->
+    <div class="shop-card">
+      <div class="shop-card-img">
+        <span class="new-tag" style="background:#00cfff; color:#0a1a3c;">SPARSET</span>
+        <img src="lenny_blueberry.png" alt="Lenny 6er Pack"
+             onerror="this.style.cssText='width:120px;height:180px;background:radial-gradient(#1565e0,#0a1a3c);border-radius:40% 40% 35% 35%;display:flex;align-items:center;justify-content:center;font-size:3rem;'">
+      </div>
+      <div class="shop-card-body">
+        <h3>Lenny 6er-Pack</h3>
+        <div class="flavor">Blaubäre-Erdbär Geschmack</div>
+        <p class="desc">6 × 500 ml · Spar 10% vs. Einzelpreis · Perfekt fürs Wochenende</p>
+        <div class="qty-row">
+          <label>Menge:</label>
+          <div class="qty-picker">
+            <button class="qty-btn" onclick="changeQty('q2',-1)">−</button>
+            <span class="qty-display" id="q2">1</span>
+            <button class="qty-btn" onclick="changeQty('q2',1)">+</button>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="card-price">10,74 € <span>/ 6er</span></div>
+          <button class="btn-card" onclick="addToCartPack(getQty('q2'))">In den Korb 🛒</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12er Pack -->
+    <div class="shop-card">
+      <div class="shop-card-img">
+        <span class="new-tag" style="background:#ffd700; color:#0a1a3c;">BESTSELLER</span>
+        <img src="lenny_blueberry.png" alt="Lenny 12er Pack"
+             onerror="this.style.cssText='width:120px;height:180px;background:radial-gradient(#1565e0,#0a1a3c);border-radius:40% 40% 35% 35%;display:flex;align-items:center;justify-content:center;font-size:3rem;'">
+      </div>
+      <div class="shop-card-body">
+        <h3>Lenny 12er-Pack</h3>
+        <div class="flavor">Blaubäre-Erdbär Geschmack</div>
+        <p class="desc">12 × 500 ml · Spar 15% · Monatsvorrat für echte Lenny-Fans</p>
+        <div class="qty-row">
+          <label>Menge:</label>
+          <div class="qty-picker">
+            <button class="qty-btn" onclick="changeQty('q3',-1)">−</button>
+            <span class="qty-display" id="q3">1</span>
+            <button class="qty-btn" onclick="changeQty('q3',1)">+</button>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="card-price">20,29 € <span>/ 12er</span></div>
+          <button class="btn-card" onclick="addToCartCase(getQty('q3'))">In den Korb 🛒</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ÜBER UNS -->
+<section class="section" id="ueber-uns" style="background:rgba(0,0,0,.18); max-width:100%; border-top:1px solid rgba(77,179,255,.15);">
+  <div style="max-width:700px; margin:0 auto; text-align:center;">
+    <h2 class="section-title">Über <span>uns</span></h2>
+    <p style="color:rgba(255,255,255,.7); line-height:1.7; font-size:15px;">
+      Lenny wurde geboren auf TikTok – und ist jetzt für dich online bestellbar.
+      Der eisblaue Bär mit Sonnenbrille steht für einen Moment der Abkühlung, wann immer du willst.
+      Folge <strong>@Lenny_FCM1965</strong> auf TikTok für neue Flavors, Aktionen und Gewinnspiele.
+    </p>
+    <a href="https://www.tiktok.com/@Lenny_FCM1965" target="_blank" rel="noopener"
+       class="social-pill" style="display:inline-flex; margin-top:20px;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.17 8.17 0 004.79 1.52V6.76a4.85 4.85 0 01-1.02-.07z"/>
+      </svg>
+      @Lenny_FCM1965 auf TikTok folgen
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Lenny<span>.</span></div>
+  <div class="social-row">
+    <a href="https://www.tiktok.com/@Lenny_FCM1965" target="_blank" rel="noopener" class="social-pill">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.17 8.17 0 004.79 1.52V6.76a4.85 4.85 0 01-1.02-.07z"/>
+      </svg>
+      @Lenny_FCM1965
+    </a>
+  </div>
+  <p>&copy; 2026 Lenny Drinks · Alle Rechte vorbehalten</p>
+  <p style="margin-top:6px;"><a href="#">Impressum</a> · <a href="#">Datenschutz</a> · <a href="#">AGB</a></p>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✅ Zum Warenkorb hinzugefügt!</div>
+
+<!-- CART SIDEBAR -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCartOnOverlay(event)">
+  <div class="cart-sidebar">
+    <div class="cart-header">
+      <h2>🛒 Warenkorb</h2>
+      <button class="close-btn" onclick="closeCart()">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <div class="cart-empty">Dein Warenkorb ist leer.</div>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total-row">
+        <span class="label">Gesamtbetrag:</span>
+        <span class="total" id="cartTotal">0,00 €</span>
+      </div>
+      <button class="btn-checkout" onclick="openCheckout()">Zur Kasse →</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="modal-overlay" id="checkoutOverlay">
+  <div class="modal">
+    <div id="checkoutForm">
+      <h2>Bestellung aufgeben</h2>
+      <p class="subtitle">Lieferung innerhalb von 2–4 Werktagen</p>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Vorname</label>
+          <input type="text" id="firstName" placeholder="Max" />
+        </div>
+        <div class="form-group">
+          <label>Nachname</label>
+          <input type="text" id="lastName" placeholder="Mustermann" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>E-Mail</label>
+        <input type="email" id="email" placeholder="max@beispiel.de" />
+      </div>
+      <div class="form-group">
+        <label>Straße & Hausnummer</label>
+        <input type="text" id="street" placeholder="Musterstraße 1" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>PLZ</label>
+          <input type="text" id="plz" placeholder="12345" style="max-width:120px" />
+        </div>
+        <div class="form-group">
+          <label>Stadt</label>
+          <input type="text" id="city" placeholder="Berlin" />
+        </div>
+      </div>
+      <div class="order-summary-mini">
+        <h4>Bestellübersicht</h4>
+        <div id="summaryItems"></div>
+        <div class="summary-row total">
+          <span>Gesamt</span>
+          <span id="summaryTotal"></span>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" onclick="closeCheckout()">Abbrechen</button>
+        <button class="btn-place-order" onclick="placeOrder()">Jetzt bestellen ✓</button>
+      </div>
+    </div>
+    <div class="success-state" id="successState">
+      <div class="success-icon">🎉</div>
+      <h2>Bestellung eingegangen!</h2>
+      <p>Danke für deine Bestellung! Wir haben dir eine Bestätigung per E-Mail geschickt.<br/>Dein Lenny Blueberry kommt in 2–4 Werktagen.</p>
+      <div class="order-num" id="orderNum"></div>
+      <button class="btn-close-success" onclick="closeCheckoutSuccess()">Super! Schließen</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const UNIT_PRICE = 1.99;
+  let cart = [];
+
+  function getQty(id) {
+    return parseInt(document.getElementById(id).textContent) || 1;
+  }
+  function changeQty(id, delta) {
+    const el = document.getElementById(id);
+    const val = Math.max(1, parseInt(el.textContent) + delta);
+    el.textContent = val;
+  }
+
+  function addToCart(qty = 1) {
+    for (let i = 0; i < qty; i++) {
+      const idx = cart.findIndex(i => i.id === 'single');
+      if (idx > -1) { cart[idx].qty++; }
+      else { cart.push({ id: 'single', name: 'Lenny Blueberry', unit: '500 ml', price: UNIT_PRICE, qty: 1 }); }
+    }
+    syncCart();
+    showToast(`${qty}× Lenny Blueberry zum Korb hinzugefügt!`);
+  }
+  function addToCartPack(qty = 1) {
+    const PACK_PRICE = parseFloat((UNIT_PRICE * 6 * 0.9).toFixed(2));
+    for (let i = 0; i < qty; i++) {
+      const idx = cart.findIndex(i => i.id === 'pack6');
+      if (idx > -1) { cart[idx].qty++; }
+      else { cart.push({ id: 'pack6', name: 'Lenny 6er-Pack', unit: '6 × 500 ml', price: PACK_PRICE, qty: 1 }); }
+    }
+    syncCart();
+    showToast(`${qty}× 6er-Pack zum Korb hinzugefügt!`);
+  }
+  function addToCartCase(qty = 1) {
+    const CASE_PRICE = parseFloat((UNIT_PRICE * 12 * 0.85).toFixed(2));
+    for (let i = 0; i < qty; i++) {
+      const idx = cart.findIndex(i => i.id === 'case12');
+      if (idx > -1) { cart[idx].qty++; }
+      else { cart.push({ id: 'case12', name: 'Lenny 12er-Pack', unit: '12 × 500 ml', price: CASE_PRICE, qty: 1 }); }
+    }
+    syncCart();
+    showToast(`${qty}× 12er-Pack zum Korb hinzugefügt!`);
+  }
+
+  function removeFromCart(id) {
+    cart = cart.filter(i => i.id !== id);
+    syncCart();
+  }
+  function changeCartQty(id, delta) {
+    const item = cart.find(i => i.id === id);
+    if (!item) return;
+    item.qty = Math.max(1, item.qty + delta);
+    syncCart();
+  }
+
+  function syncCart() {
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    document.getElementById('cartCount').textContent = cart.reduce((s,i) => s + i.qty, 0);
+    document.getElementById('cartTotal').textContent = fmt(total);
+
+    const container = document.getElementById('cartItems');
+    if (!cart.length) {
+      container.innerHTML = '<div class="cart-empty">Dein Warenkorb ist leer.</div>';
+      return;
+    }
+    container.innerHTML = cart.map(item => `
+      <div class="cart-item">
+        <img src="lenny_blueberry.png" alt="" onerror="this.style.cssText='width:56px;height:56px;background:radial-gradient(#1565e0,#0a1a3c);border-radius:8px;'">
+        <div class="cart-item-info">
+          <div class="name">${item.name}</div>
+          <div class="unit">${item.unit}</div>
+          <div class="cart-item-qty">
+            <button class="qty-btn" style="width:24px;height:24px;font-size:14px;" onclick="changeCartQty('${item.id}',-1)">−</button>
+            <span style="width:28px;text-align:center;font-weight:700;">${item.qty}</span>
+            <button class="qty-btn" style="width:24px;height:24px;font-size:14px;" onclick="changeCartQty('${item.id}',1)">+</button>
+          </div>
+          <div class="subtotal">${fmt(item.price * item.qty)}</div>
+        </div>
+        <button class="remove-btn" onclick="removeFromCart('${item.id}')">✕</button>
+      </div>
+    `).join('');
+  }
+
+  function fmt(n) { return n.toFixed(2).replace('.', ',') + ' €'; }
+
+  function openCart() { document.getElementById('cartOverlay').classList.add('open'); }
+  function closeCart() { document.getElementById('cartOverlay').classList.remove('open'); }
+  function closeCartOnOverlay(e) { if (e.target === document.getElementById('cartOverlay')) closeCart(); }
+
+  function openCheckout() {
+    if (!cart.length) { showToast('Dein Warenkorb ist leer!'); return; }
+    closeCart();
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    document.getElementById('summaryItems').innerHTML = cart.map(i =>
+      `<div class="summary-row"><span>${i.name} × ${i.qty}</span><span>${fmt(i.price * i.qty)}</span></div>`
+    ).join('');
+    document.getElementById('summaryTotal').textContent = fmt(total);
+    document.getElementById('checkoutForm').style.display = '';
+    document.getElementById('successState').style.display = 'none';
+    document.getElementById('checkoutOverlay').classList.add('open');
+  }
+  function closeCheckout() { document.getElementById('checkoutOverlay').classList.remove('open'); }
+  function closeCheckoutSuccess() {
+    document.getElementById('checkoutOverlay').classList.remove('open');
+    cart = []; syncCart();
+  }
+
+  function placeOrder() {
+    const fields = ['firstName','lastName','email','street','plz','city'];
+    const missing = fields.filter(f => !document.getElementById(f).value.trim());
+    if (missing.length) { showToast('Bitte alle Felder ausfüllen!'); return; }
+    const orderId = 'LNY-' + Math.random().toString(36).slice(2,8).toUpperCase();
+    document.getElementById('orderNum').textContent = 'Bestellnummer: ' + orderId;
+    document.getElementById('checkoutForm').style.display = 'none';
+    document.getElementById('successState').style.display = 'block';
+  }
+
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = '✅ ' + msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+  }
+</script>
+</body>
+</html>
